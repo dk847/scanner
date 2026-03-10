@@ -12,8 +12,7 @@ npm install
 ```
 
 ## Running the script
-[Screencast from 2026-03-09 20-12-23.webm](https://github.com/user-attachments/assets/84f9f517-5b7c-4e67-99b1-6af411c6d82d)
-
+[Screencast from 2026-03-09 20-12-23.webm](https://github.com/user-attachments/assets/e5e27657-8901-4e61-a309-193209fa1d26)
 ```
 cd backend/app
 
@@ -33,7 +32,7 @@ Include this flag to generate a report in JSON format.
 ```
 
 ## Running the Flask+React app
-[screen-capture.webm](https://github.com/user-attachments/assets/de0cabb3-8c72-4dc7-92f1-369dc74e9349)
+[screen-capture.webm](https://github.com/user-attachments/assets/8c03d600-e8fb-4a95-aa27-7f2021847555)
 ```
 # Terminal 1
 cd backend/app
