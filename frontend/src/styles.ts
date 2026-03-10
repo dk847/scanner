@@ -1,0 +1,29 @@
+export default {
+    form: {
+        width: 1000,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+    },
+    inputContainer: { marginBottom: 10 },
+    fileInput: { marginLeft: 4 },
+    label: { display: 'flex', marginLeft: 4 },
+    button: {
+        backgroundColor: '#04AA6D',
+        border: 'none',
+        borderRadius: '5px',
+        color: 'white',
+        marginLeft: 4,
+        padding: '7px',
+        display: 'inline-block',
+        cursor: 'pointer',
+    },
+    output: {
+        height: 500,
+        border: '1px solid',
+        marginTop: 20,
+        marginLeft: 5,
+        paddingLeft: 20,
+        overflow: 'auto', 
+    },
+    error: { color: 'red' },
+}

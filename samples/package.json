@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@reduxjs/toolkit": "1.1.0",
+    "ansi-styles": "^6.2.3",
+    "chalk-template": "^1.1.2",
+    "loader-utils": "1.2.3",
+    "lodash": "^4.17.20"
+  }
+}
