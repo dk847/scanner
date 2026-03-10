@@ -33,10 +33,7 @@ def main():
     )
 
     if is_json:
-        print(
-            "\nReport\n"
-            "###############################################"
-        )
+        print("\nReport\n" "###############################################")
         pprint.pprint(report["json"], indent=2)
     else:
         print(report["text"])
