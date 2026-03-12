@@ -8,8 +8,10 @@ part of the CLI args for the following reasons:
 
 
 ADVISARIES_TO_IGNORE = [
-    "CVE-2024-21520",  # for djangorestframework@3.13.1
-    "CVE-2025-57833",  # for django@4.1.7
+    # For loader-utils
+    "CVE-2022-37603",
+    "CVE-2022-37601",
+    "CVE-2022-37599",
 ]
 
 # This variable isn't used; however, if I addressed the bonus requirement

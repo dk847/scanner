@@ -6,6 +6,7 @@ export default {
     },
     inputContainer: { marginBottom: 10 },
     fileInput: { marginLeft: 4 },
+    textArea: { marginLeft: 4, width: 400 },
     label: { display: 'flex', marginLeft: 4 },
     button: {
         backgroundColor: '#04AA6D',

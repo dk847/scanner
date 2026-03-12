@@ -1,15 +1,6 @@
-class TestOpenFileAndMapDeps:
-    def test_no_manifest_type(self):
+class TestIsRequirementsTxt:
+    def test_is_requirements_txt(self):
         pass
 
-    def test_requirements_txt(self):
-        pass
-
-    def test_package_lock_json(self):
-        pass
-
-    def test_package_json(self):
-        pass
-
-    def test_go_mod(self):
+    def test_is_not_requirements_txt(self):
         pass

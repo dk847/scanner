@@ -6,12 +6,14 @@ import { API_URL } from "./constants"
 
 interface FormDataInterface {
     file: File | null
+    advisories_to_ignore: string
     is_json: boolean
 }
 
 const Scanner = () => {
     const [formData, setFormData] = useState<FormDataInterface>({
         file: null,
+        advisories_to_ignore: '',
         is_json: false,
     })
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -39,6 +41,7 @@ const Scanner = () => {
 
         const fd = new FormData()
         fd.append('file', formData.file)
+        fd.append('advisories_to_ignore', formData.advisories_to_ignore)
         fd.append('is_json', formData.is_json.toString())
 
         fetch(API_URL, { method: 'POST', body: fd })
@@ -57,6 +60,19 @@ const Scanner = () => {
                     onChange={(e) => handleFileUpload(e)}
                     style={STYLES.default.fileInput}
                     required
+                />
+            </div>
+
+            <div style={STYLES.default.inputContainer}>
+                <label style={STYLES.default.label}>Advisories to Ignore</label>
+                <textarea
+                    onChange={(e) => setFormData((prev) => (
+                        { ...prev, advisories_to_ignore: e.target.value }
+                    ))}
+                    style={STYLES.default.textArea}
+                    placeholder='CVE-2022-37603, CVE-2022-37601, CVE-2022-37599'
+                    rows={5}
+                    
                 />
             </div>
 

@@ -7,6 +7,7 @@ import pprint
 from argparse import ArgumentParser, BooleanOptionalAction
 
 from business import scan_deps_and_construct_report
+from config import ADVISARIES_TO_IGNORE
 from integrators import OsvAPIClient
 from parsers import open_file_and_map_deps
 
@@ -30,10 +31,10 @@ def main():
     report = scan_deps_and_construct_report(
         osv_api=osv_api,
         deps=deps,
+        advisories_to_ignore=ADVISARIES_TO_IGNORE
     )
 
     if is_json:
-        print("\nReport\n" "###############################################")
         pprint.pprint(report["json"], indent=2)
     else:
         print(report["text"])

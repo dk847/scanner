@@ -7,7 +7,7 @@ import json
 import os
 import subprocess
 
-from typing import List, Optional
+from typing import List
 
 from constants import (
     GENERATED_DIR_NAME,
@@ -16,53 +16,46 @@ from constants import (
     PACKAGE_LOCK_JSON_KEYWORD,
     REQUIREMENTS_TXT_KEYWORD,
     Ecosystems,
-    Manifest,
 )
 
 
-def open_file_and_map_deps(filepath: str) -> dict:
+def open_file_and_map_deps(filepath: str) -> List[dict]:
     """
     Opens the manifest file and maps the content to a dictionary.
-    """
 
-    mt = determine_manifest_type(filepath=filepath)
-    if not mt:
-        return []
-
-    deps = []
-    if mt == Manifest.REQUIREMENTS_TXT:
-        deps = parse_requirements_file(filepath=filepath)
-    elif mt == Manifest.PACKAGE_LOCK_JSON:
-        deps = parse_package_lock_json_file(filepath=filepath)
-    elif mt == Manifest.PACKAGE_JSON:
-        deps = parse_package_json_file(filepath=filepath)
-    elif mt == Manifest.GO_MOD:
-        deps = parse_go_mod_file(filepath=filepath)
-
-    return deps
-
-
-def determine_manifest_type(filepath: str) -> Optional[Manifest]:
-    """
-    Determines the manifest type based off of the filename.
-
-    NOTE: I could add some more checks to this function (such as inspecting the file content)
+    NOTE: I could add some more checks to these functions (such as inspecting the file content)
     to make it more robust,
     """
 
     filename = filepath.split("/")[-1]
 
-    mt = None
-    if REQUIREMENTS_TXT_KEYWORD in filename:
-        mt = Manifest.REQUIREMENTS_TXT
-    elif PACKAGE_LOCK_JSON_KEYWORD in filename:
-        mt = Manifest.PACKAGE_LOCK_JSON
-    elif PACKAGE_JSON_KEYWORD in filename:
-        mt = Manifest.PACKAGE_JSON
-    elif GO_MOD_KEYWORD in filename:
-        mt = Manifest.GO_MOD
+    deps = []
+    if is_requirements_txt(filename=filename):
+        deps = parse_requirements_file(filepath=filepath)
+    elif is_package_lock_json(filename=filename):
+        deps = parse_package_lock_json_file(filepath=filepath)
+    elif is_package_json(filename=filename):
+        deps = parse_package_json_file(filepath=filepath)
+    elif is_go_mod(filename=filename):
+        deps = parse_go_mod_file(filepath=filepath)
 
-    return mt
+    return deps
+
+
+def is_requirements_txt(filename: str) -> bool:
+    return REQUIREMENTS_TXT_KEYWORD in filename
+
+
+def is_package_lock_json(filename: str) -> bool:
+    return PACKAGE_LOCK_JSON_KEYWORD in filename
+
+
+def is_package_json(filename: str) -> bool:
+    return PACKAGE_JSON_KEYWORD in filename
+
+
+def is_go_mod(filename: str) -> bool:
+    return GO_MOD_KEYWORD in filename
 
 
 # requirements.txt

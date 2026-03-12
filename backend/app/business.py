@@ -9,7 +9,6 @@ from typing import List, Optional
 from werkzeug.datastructures.file_storage import FileStorage
 
 from constants import API_TMP_DIR_NAME
-from config import ADVISARIES_TO_IGNORE
 from integrators import OsvAPIClient
 from parsers import open_file_and_map_deps
 
@@ -17,6 +16,7 @@ from parsers import open_file_and_map_deps
 def scan_deps_and_construct_report(
     osv_api: OsvAPIClient,
     deps: List[dict],
+    advisories_to_ignore: List[str],
 ) -> Optional[dict]:
     """
     Scans dependencies, constructs an overview and returns the data
@@ -26,7 +26,10 @@ def scan_deps_and_construct_report(
     print("Scanning manifest.\n")
 
     scanned_deps = scan_deps(osv_api=osv_api, deps=deps)
-    overview = construct_overview(scanned_deps=scanned_deps)
+    overview = construct_overview(
+        scanned_deps=scanned_deps,
+        advisories_to_ignore=advisories_to_ignore,
+    )
 
     return {"json": overview, "text": format_report_as_text(overview=overview)}
 
@@ -67,13 +70,16 @@ def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> List[dict]:
     return scanned_deps
 
 
-def construct_overview(scanned_deps: List[dict]) -> dict:
+def construct_overview(scanned_deps: List[dict], advisories_to_ignore: List[str]) -> dict:
     """
     Constructs an overview of all scanned dependencies.
     """
 
     deps_with_vulns = list(filter(lambda dep: len(dep["vulns"]) > 0, scanned_deps))
-    filtered_deps_with_vulns = filter_deps_with_vulns(deps=deps_with_vulns)
+    filtered_deps_with_vulns = filter_deps_with_vulns(
+        deps=deps_with_vulns,
+        advisories_to_ignore=advisories_to_ignore,
+    )
 
     scan_count = len(scanned_deps)
     vuln_count = len(filtered_deps_with_vulns)
@@ -93,7 +99,7 @@ def construct_overview(scanned_deps: List[dict]) -> dict:
     }
 
 
-def filter_deps_with_vulns(deps: List[dict]) -> List[dict]:
+def filter_deps_with_vulns(deps: List[dict], advisories_to_ignore: List[str]) -> List[dict]:
     """
     Filters out dependencies that have flagged vulnerabilities.
     """
@@ -104,10 +110,13 @@ def filter_deps_with_vulns(deps: List[dict]) -> List[dict]:
         filtered_vulns = []
 
         for vuln in dep["vulns"]:
-            if should_ignore_vuln(dep_advisories=vuln["aliases"]):
+            if should_ignore_vuln(
+                dep_advisories=vuln["aliases"],
+                advisories_to_ignore=advisories_to_ignore
+            ):
                 print(
-                    f"Skipping vulnerability '{vuln['cve_id']}' for dependency '{dep['name']}' "
-                    "since it has an advisory name that has been flagged to skip in 'config.py'"
+                    f"{dep['name']}: Skipping vulnerability '{vuln['cve_id']}' "
+                    "since it's been flagged to skip in 'config.py'."
                 )
                 continue
 
@@ -120,13 +129,13 @@ def filter_deps_with_vulns(deps: List[dict]) -> List[dict]:
     return filtered_deps
 
 
-def should_ignore_vuln(dep_advisories: List[str]) -> bool:
+def should_ignore_vuln(dep_advisories: List[str], advisories_to_ignore: List[str]) -> bool:
     """
     Checks if a dependency belongs to the 'ADVISARIES_TO_IGNORE' list.
     """
 
     for dep_adv in dep_advisories:
-        for adv_to_ignore in ADVISARIES_TO_IGNORE:
+        for adv_to_ignore in advisories_to_ignore:
             if dep_adv == adv_to_ignore:
                 return True
 
@@ -170,11 +179,13 @@ def format_report_as_text(overview: dict) -> str:
     return report
 
 
-def handle_flask_api_call(file: FileStorage) -> dict:
+def handle_flask_api_call(file: FileStorage, advisories_to_ignore: List[str]) -> dict:
     """
     Handles the Flask API call for the React web app. This function contains
     similar logic to the 'main' function in 'scanner.py'.
     """
+
+    print(advisories_to_ignore)
 
     # Uploading file to temp directory so that the parser can process it
     os.makedirs(name=API_TMP_DIR_NAME, exist_ok=True)
@@ -187,6 +198,7 @@ def handle_flask_api_call(file: FileStorage) -> dict:
     report = scan_deps_and_construct_report(
         osv_api=osv_api,
         deps=deps,
+        advisories_to_ignore=advisories_to_ignore,
     )
 
     return report
