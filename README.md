@@ -57,7 +57,7 @@ Example of report in JSON format
 ```
 
 ## Running the Flask+React app
-[screen-capture.webm](https://github.com/user-attachments/assets/8c03d600-e8fb-4a95-aa27-7f2021847555)
+[screen-capture.webm](https://github.com/user-attachments/assets/c4999cbf-6fdd-448d-b629-c94df3c73935)
 ```
 # Terminal 1
 cd backend/app
