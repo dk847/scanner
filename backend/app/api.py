@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 
 from business import handle_flask_api_call
-from constants import FE_BASE_URL
+from constants import FE_BASE_URL, FLASK_API_PORT
 
 
 app = Flask(__name__)
@@ -21,7 +21,6 @@ def scan_manifest():
         file=request.files["file"],
         advisories_to_ignore=advisories_to_ignore,
     )
-
     if request.form["is_json"] == "true":
         return report["json"]
 
@@ -29,4 +28,4 @@ def scan_manifest():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8000)
+    app.run(debug=True, port=FLASK_API_PORT)

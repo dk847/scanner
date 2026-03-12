@@ -17,7 +17,7 @@ def scan_deps_and_construct_report(
     osv_api: OsvAPIClient,
     deps: List[dict],
     advisories_to_ignore: List[str],
-) -> Optional[dict]:
+) -> dict:
     """
     Scans dependencies, constructs an overview and returns the data
     in JSON and text format.
@@ -36,7 +36,7 @@ def scan_deps_and_construct_report(
 
 def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> List[dict]:
     """
-    Scans a dependency by sending it to the OVS.dev API.
+    Scans a dependency by sending it to the OSV.dev API.
     """
 
     scanned_deps = []
@@ -193,8 +193,6 @@ def handle_flask_api_call(file: FileStorage, advisories_to_ignore: List[str]) ->
     Handles the Flask API call for the React web app. This function contains
     similar logic to the 'main' function in 'scanner.py'.
     """
-
-    print(advisories_to_ignore)
 
     # Uploading file to temp directory so that the parser can process it
     os.makedirs(name=API_TMP_DIR_NAME, exist_ok=True)

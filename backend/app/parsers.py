@@ -23,8 +23,8 @@ def open_file_and_map_deps(filepath: str) -> List[dict]:
     """
     Opens the manifest file and maps the content to a dictionary.
 
-    NOTE: I could add some more checks to these functions (such as inspecting the file content)
-    to make it more robust,
+    NOTE: I could add some more checks to these functions
+    (such as inspecting the file content) to make it more robust,
     """
 
     filename = filepath.split("/")[-1]
@@ -42,23 +42,11 @@ def open_file_and_map_deps(filepath: str) -> List[dict]:
     return deps
 
 
+# requirements.txt
 def is_requirements_txt(filename: str) -> bool:
     return REQUIREMENTS_TXT_KEYWORD in filename
 
 
-def is_package_lock_json(filename: str) -> bool:
-    return PACKAGE_LOCK_JSON_KEYWORD in filename
-
-
-def is_package_json(filename: str) -> bool:
-    return PACKAGE_JSON_KEYWORD in filename
-
-
-def is_go_mod(filename: str) -> bool:
-    return GO_MOD_KEYWORD in filename
-
-
-# requirements.txt
 def parse_requirements_file(filepath: str) -> List[dict]:
     """
     Parses dependencies from a 'requirements.txt' file.
@@ -118,6 +106,10 @@ def generate_new_requirements_file(original_filepath: str) -> str:
 
 
 # package-lock.json
+def is_package_lock_json(filename: str) -> bool:
+    return PACKAGE_LOCK_JSON_KEYWORD in filename
+
+
 def parse_package_lock_json_file(filepath: str) -> List[dict]:
     """
     Parses dependencies from a 'package-lock.json' file.
@@ -164,6 +156,10 @@ def filter_package_lock_json_packages(all_deps: dict) -> dict:
 
 
 # package.json
+def is_package_json(filename: str) -> bool:
+    return PACKAGE_JSON_KEYWORD in filename
+
+
 def parse_package_json_file(filepath: str) -> List[dict]:
     """
     Parses dependencies from a 'package.json' file.
@@ -206,6 +202,10 @@ def filter_package_json_packages(all_deps: dict) -> dict:
 
 
 # go.mod
+def is_go_mod(filename: str) -> bool:
+    return GO_MOD_KEYWORD in filename
+
+
 def parse_go_mod_file(filepath: str) -> List[dict]:
     """
     Parses dependencies from a 'go.mod' file.

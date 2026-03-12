@@ -9,9 +9,9 @@ part of the CLI args for the following reasons:
 
 ADVISARIES_TO_IGNORE = [
     # For loader-utils
-    "CVE-2022-37603",
-    "CVE-2022-37601",
-    "CVE-2022-37599",
+    # "CVE-2022-37603",
+    # "CVE-2022-37601",
+    # "CVE-2022-37599",
 ]
 
 # This variable isn't used; however, if I addressed the bonus requirement

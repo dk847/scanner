@@ -28,3 +28,4 @@ PACKAGE_JSON_KEYWORD = ".json"
 GO_MOD_KEYWORD = ".mod"
 
 FE_BASE_URL = "http://localhost:3000"
+FLASK_API_PORT = 8000
