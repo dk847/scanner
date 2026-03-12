@@ -31,6 +31,31 @@ Specify the filepath of the manifest you'd like to scan.
 -j, --json, --no-json
 Include this flag to generate a report in JSON format.
 ```
+```
+Example of report in JSON format
+#######################################################
+{
+  "deps_with_vulns": [
+    {
+      "name": "loader-utils",
+      "version": "1.2.3",
+      "vulns": [
+        {
+          "advisory_links": ["https://nvd.nist.gov/vuln/detail/CVE-2022-37603"],
+          "aliases": ["CVE-2022-37603"],
+          "cve_id": "CVE-2022-37603",
+          "fixes": ["1.4.2", "2.0.4", "3.2.1"],
+          "severity": "HIGH",
+          "summary": "loader-utils is vulnerable to Regular Expression Denial of Service (ReDoS) via url variable"
+        }
+      ]
+    }
+  ],
+  "scan_count": 2,
+  "vuln_count": 1,
+  "vuln_percentage": 0.5
+}
+```
 
 ## Running the Flask+React app
 [screen-capture.webm](https://github.com/user-attachments/assets/de0cabb3-8c72-4dc7-92f1-369dc74e9349)
@@ -69,7 +94,7 @@ npm run dev
 1) **Support for multiple ecosystem formats (e.g. in addition to JS & Python other languages).**
    - I added support for the `Go` ecosystem. I also structured the code in a way where you can easily modify `parser.py` to account for additional ecosystems.
 2) **Ability to suppress specific advisories (via an ignore list).**
-   - I added a `ADVISARIES_TO_IGNORE` variable to `constants.py`, which can be used
+   - I added a `ADVISARIES_TO_IGNORE` variable to `config.py`, which can be used
    to flag certain vulnerabilities by alias (ex: `CVE-2025-57833`, `GHSA-8ghj-p4vj-mr35`)
 3) **Flagging of unmaintained packages (e.g. no releases in past X months).**
    - I didn't add functionality for this; however, I added a `LAST_RELEASE_IN_MONTHS` variable to `config.py` that would account for this.
