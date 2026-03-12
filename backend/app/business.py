@@ -70,7 +70,10 @@ def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> List[dict]:
     return scanned_deps
 
 
-def construct_overview(scanned_deps: List[dict], advisories_to_ignore: List[str]) -> dict:
+def construct_overview(
+    scanned_deps: List[dict],
+    advisories_to_ignore: List[str],
+) -> dict:
     """
     Constructs an overview of all scanned dependencies.
     """
@@ -99,7 +102,10 @@ def construct_overview(scanned_deps: List[dict], advisories_to_ignore: List[str]
     }
 
 
-def filter_deps_with_vulns(deps: List[dict], advisories_to_ignore: List[str]) -> List[dict]:
+def filter_deps_with_vulns(
+    deps: List[dict],
+    advisories_to_ignore: List[str],
+) -> List[dict]:
     """
     Filters out dependencies that have flagged vulnerabilities.
     """
@@ -112,7 +118,7 @@ def filter_deps_with_vulns(deps: List[dict], advisories_to_ignore: List[str]) ->
         for vuln in dep["vulns"]:
             if should_ignore_vuln(
                 dep_advisories=vuln["aliases"],
-                advisories_to_ignore=advisories_to_ignore
+                advisories_to_ignore=advisories_to_ignore,
             ):
                 print(
                     f"{dep['name']}: Skipping vulnerability '{vuln['cve_id']}' "
@@ -129,7 +135,10 @@ def filter_deps_with_vulns(deps: List[dict], advisories_to_ignore: List[str]) ->
     return filtered_deps
 
 
-def should_ignore_vuln(dep_advisories: List[str], advisories_to_ignore: List[str]) -> bool:
+def should_ignore_vuln(
+    dep_advisories: List[str],
+    advisories_to_ignore: List[str],
+) -> bool:
     """
     Checks if a dependency belongs to the 'ADVISARIES_TO_IGNORE' list.
     """

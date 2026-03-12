@@ -31,7 +31,7 @@ def main():
     report = scan_deps_and_construct_report(
         osv_api=osv_api,
         deps=deps,
-        advisories_to_ignore=ADVISARIES_TO_IGNORE
+        advisories_to_ignore=ADVISARIES_TO_IGNORE,
     )
 
     if is_json:
