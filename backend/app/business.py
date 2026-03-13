@@ -28,7 +28,7 @@ def scan_deps_and_construct_report(
     scanned_results = scan_deps(osv_api=osv_api, deps=deps)
     overview = construct_overview(
         scanned_deps=scanned_results["scanned_deps"],
-        failed_dep_names=scanned_results["failed_dep_names"],
+        deps_failed_to_scan=scanned_results["deps_failed_to_scan"],
         advisories_to_ignore=advisories_to_ignore,
     )
     return {"json": overview, "text": format_report_as_text(overview=overview)}
@@ -39,7 +39,7 @@ def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> dict:
     Scans a dependency by sending it to the OSV.dev API.
     """
 
-    failed_dep_names = []
+    deps_failed_to_scan = []
     scanned_deps = []
 
     for dep in deps:
@@ -61,7 +61,7 @@ def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> dict:
                 f"name={name}, version={version} | ecosystem={ecosystem}, "
                 f" error={err_msg}"
             )
-            failed_dep_names.append(name)
+            deps_failed_to_scan.append(name)
             continue
 
         scanned_dep_dict = result.unwrap()
@@ -72,13 +72,13 @@ def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> dict:
 
     return {
         "scanned_deps": scanned_deps,
-        "failed_dep_names": failed_dep_names,
+        "deps_failed_to_scan": deps_failed_to_scan,
     }
 
 
 def construct_overview(
     scanned_deps: List[dict],
-    failed_dep_names: List[str],
+    deps_failed_to_scan: List[str],
     advisories_to_ignore: List[str],
 ) -> dict:
     """
@@ -106,7 +106,7 @@ def construct_overview(
         "vuln_count": vuln_count,
         "vuln_percentage": vuln_percentage,
         "deps_with_vulns": filtered_deps_with_vulns,
-        "deps_failed_to_scan": failed_dep_names,
+        "deps_failed_to_scan": deps_failed_to_scan,
     }
 
 
