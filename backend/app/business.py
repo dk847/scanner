@@ -25,21 +25,23 @@ def scan_deps_and_construct_report(
 
     print("Scanning manifest.\n")
 
-    scanned_deps = scan_deps(osv_api=osv_api, deps=deps)
+    scanned_results = scan_deps(osv_api=osv_api, deps=deps)
     overview = construct_overview(
-        scanned_deps=scanned_deps,
+        scanned_deps=scanned_results["scanned_deps"],
+        failed_dep_names=scanned_results["failed_dep_names"],
         advisories_to_ignore=advisories_to_ignore,
     )
-
     return {"json": overview, "text": format_report_as_text(overview=overview)}
 
 
-def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> List[dict]:
+def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> dict:
     """
     Scans a dependency by sending it to the OSV.dev API.
     """
 
+    failed_dep_names = []
     scanned_deps = []
+
     for dep in deps:
         name = dep["name"]
         version = dep["version"]
@@ -55,10 +57,11 @@ def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> List[dict]:
         if result.is_err():
             err_msg = result.unwrap_err()
             print(
-                "\nUnable to scan dependency. | "
+                "Failed to scan dependency. | "
                 f"name={name}, version={version} | ecosystem={ecosystem}, "
-                f" error={err_msg}\n"
+                f" error={err_msg}"
             )
+            failed_dep_names.append(name)
             continue
 
         scanned_dep_dict = result.unwrap()
@@ -67,11 +70,15 @@ def scan_deps(osv_api: OsvAPIClient, deps: List[dict]) -> List[dict]:
     # Adds a new line after the dependencies are scanned.
     print("")
 
-    return scanned_deps
+    return {
+        "scanned_deps": scanned_deps,
+        "failed_dep_names": failed_dep_names,
+    }
 
 
 def construct_overview(
     scanned_deps: List[dict],
+    failed_dep_names: List[str],
     advisories_to_ignore: List[str],
 ) -> dict:
     """
@@ -99,6 +106,7 @@ def construct_overview(
         "vuln_count": vuln_count,
         "vuln_percentage": vuln_percentage,
         "deps_with_vulns": filtered_deps_with_vulns,
+        "deps_failed_to_scan": failed_dep_names,
     }
 
 
@@ -156,19 +164,21 @@ def format_report_as_text(overview: dict) -> str:
     Formats the vulnerability report in text format.
     """
 
-    report = "Finished scanning manifest."
-
-    if len(overview["deps_with_vulns"]) == 0:
-        report += " You have no vulnerabilities!"
-        return report
-
     vuln_percentage = round(overview["vuln_percentage"] * 100, 3)
-    report += (
-        f" {overview['vuln_count']}/{overview['scan_count']} ({vuln_percentage}%) "
-        "dependencies have a vulnerability.\n\n"
-        "Report\n"
-        "###############################################"
+    report = (
+        f"Finished scanning manifest. {overview['vuln_count']}/{overview['scan_count']} ({vuln_percentage}%) "
+        "successfully scanned dependencies have a vulnerability.\n"
     )
+
+    if overview['deps_failed_to_scan']:
+        report += f"Failed to scan the following dependencies: {overview['deps_failed_to_scan']}\n"
+
+    if overview["deps_with_vulns"]:
+        report += (
+            "\nSummary\n"
+            "###############################################"
+        )
+
     for dep in overview["deps_with_vulns"]:
         report += f"\n{dep['name']}@{dep['version']}"
 

@@ -39,6 +39,7 @@ Include this flag to generate the report in JSON format.
 Example of report in JSON format
 #######################################################
 {
+  "deps_failed_to_scan": ['lodash'],
   "deps_with_vulns": [
     {
       "name": "loader-utils",
