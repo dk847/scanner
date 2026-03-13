@@ -55,7 +55,7 @@ def setup_cli_args() -> ArgumentParser:
     parser.add_argument(
         "-j",
         "--json",
-        help="Include this flag to generate a report in JSON format.",
+        help="Include this flag to generate the report in JSON format.",
         action=BooleanOptionalAction,
     )
     return parser

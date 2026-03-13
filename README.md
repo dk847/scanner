@@ -1,12 +1,17 @@
 ## Setting up the BE/FE environments
 ```
-# Terminal 1
+Terminal 1
+#######################################################
 cd backend
 python3 -m venv venv
 . venv/bin/activate
 pip install -r requirements.txt
 
-# Terminal 2
+# running this separately since it's unsafe to include 'pip-compile' in 'requirements.txt'
+pip install pip-tools 
+
+Terminal 2
+#######################################################
 cd frontend
 npm install
 ```
@@ -59,11 +64,13 @@ Example of report in JSON format
 ## Running the Flask+React app
 [screen-capture.webm](https://github.com/user-attachments/assets/c4999cbf-6fdd-448d-b629-c94df3c73935)
 ```
-# Terminal 1
+Terminal 1
+#######################################################
 cd backend/app
 python3 api.py
 
-# Terminal 2
+Terminal 2
+#######################################################
 cd frontend
 npm run dev
 ```
@@ -85,13 +92,13 @@ npm run dev
    - Some external Python packages I used are `requests` (used for making API calls) and `result` (used for error handling).
 4) **Accepts input via command line (e.g. ./scanner.py requirements.txt)**
    - The CLI accepts 2 arguments (`filepath`, `json`)
-5) **Outputs results in both `Human-readable` and `JSON` format:**
+5) **Outputs results in both `Huma-readable` and `JSON` format:**
    - Excluding the `--json` flag outputs the report in text format.
    - Including the `--json` flag outputs the report in JSON format.
 
 ## Bonus Requirements
 1) **Support for multiple ecosystem formats (e.g. in addition to JS & Python other languages).**
-   - I added support for the `Go` ecosystem. I also structured the code in a way where you can easily modify `parser.py` to account for additional ecosystems.
+   - I added support for the `Go` ecosystem. I also structured the code in a way where you can easily modify `parsers.py` to account for additional ecosystems.
 2) **Ability to suppress specific advisories (via an ignore list).**
    - I added an `ADVISARIES_TO_IGNORE` variable to `config.py`, which can be used
    to supress certain vulnerabilities by alias (ex: `CVE-2025-57833`, `GHSA-8ghj-p4vj-mr35`)
