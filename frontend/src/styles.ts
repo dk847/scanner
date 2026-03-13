@@ -1,4 +1,4 @@
-export default {
+export const STYLES = {
     form: {
         width: 1000,
         marginLeft: 'auto',
@@ -18,6 +18,7 @@ export default {
         display: 'inline-block',
         cursor: 'pointer',
     },
+    buttonDisabled: { cursor: 'not-allowed' },
     output: {
         height: 500,
         border: '1px solid',

@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useState } from 'react'
 
-import * as STYLES from './styles'
-import { API_URL } from "./constants"
+import { STYLES } from './styles'
+import { API_URL } from './constants'
 
 
 interface FormDataInterface {
@@ -51,52 +51,61 @@ const Scanner = () => {
             .finally(() => setIsSubmitting(false))
     }
 
+    const getButtonStyles = () => {
+        if (isSubmitting) {
+            return  { ...STYLES.button, ...STYLES.buttonDisabled}
+        }
+        return { ...STYLES.button }
+    }
+
     return (
-        <form style={STYLES.default.form} onSubmit={(e) => handleSubmit(e)}>
-            <div style={STYLES.default.inputContainer}>
-                <label style={STYLES.default.label}>File</label>
+        <form style={STYLES.form} onSubmit={(e) => handleSubmit(e)}>
+            <div style={STYLES.inputContainer}>
+                <label style={STYLES.label}>File</label>
                 <input
                     type='file'
                     onChange={(e) => handleFileUpload(e)}
-                    style={STYLES.default.fileInput}
+                    style={STYLES.fileInput}
                     required
+                    disabled={isSubmitting}
                 />
             </div>
 
-            <div style={STYLES.default.inputContainer}>
-                <label style={STYLES.default.label}>Advisories to Ignore</label>
+            <div style={STYLES.inputContainer}>
+                <label style={STYLES.label}>Advisories to Ignore</label>
                 <textarea
                     onChange={(e) => setFormData((prev) => (
                         { ...prev, advisories_to_ignore: e.target.value }
                     ))}
-                    style={STYLES.default.textArea}
+                    style={STYLES.textArea}
                     placeholder='CVE-2022-37603, CVE-2022-37601, CVE-2022-37599'
                     rows={5}
-                    
+                    disabled={isSubmitting}
                 />
             </div>
 
-            <div style={STYLES.default.inputContainer}>
-                <label style={STYLES.default.label}>Is JSON</label>
+            <div style={STYLES.inputContainer}>
+                <label style={ STYLES.label }>Is JSON</label>
                 <input
                     type='checkbox'
                     checked={formData.is_json}
                     onChange={(e) => {
                         setFormData((prev) => ({ ...prev, is_json: e.target.checked }))
                     }}
+                    disabled={isSubmitting}
                 />
             </div>
 
             <button
-                type="submit"
+                style={getButtonStyles()}
+                type='submit'
                 disabled={isSubmitting}
-                style={STYLES.default.button}
             >
                 Submit
             </button>
 
-            <div style={STYLES.default.output}>
-                {error && <p style={STYLES.default.error}>{error}</p>}
+            <div style={STYLES.output}>
+                {error && <p style={STYLES.error}>{error}</p>}
                 {isSubmitting ? <p>Scanning manifest...</p> : <pre>{output}</pre>}
             </div>
         </form>
